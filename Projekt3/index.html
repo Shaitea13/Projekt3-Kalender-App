@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moderne Kalender App</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="calendar-container">
+        <header class="calendar-header">
+            <button class="nav-btn" id="prevMonth">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M15 18l-6-6 6-6"/>
+                </svg>
+            </button>
+            <div class="month-year">
+                <h1 id="currentMonth">Januar</h1>
+                <span id="currentYear">2025</span>
+            </div>
+            <button class="nav-btn" id="nextMonth">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M9 18l6-6-6-6"/>
+                </svg>
+            </button>
+        </header>
+        
+        <div class="calendar-controls">
+            <button class="today-btn" id="todayBtn">Heute</button>
+            <div class="view-selector">
+                <button class="view-btn active" data-view="month">Monat</button>
+                <button class="view-btn" data-view="week">Woche</button>
+                <button class="view-btn" data-view="day">Tag</button>
+                <button class="view-btn" data-view="year">Jahr</button>
+            </div>
+            <button class="notification-btn" id="notificationBtn" title="Benachrichtigungen">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+                    <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
+                </svg>
+                <span class="notification-badge" id="notificationBadge" style="display: none;"></span>
+            </button>
+        </div>
+        
+        <div class="calendar-grid" id="calendarGrid">
+            <div class="weekdays" id="weekdaysHeader">
+                <div class="weekday">Mo</div>
+                <div class="weekday">Di</div>
+                <div class="weekday">Mi</div>
+                <div class="weekday">Do</div>
+                <div class="weekday">Fr</div>
+                <div class="weekday">Sa</div>
+                <div class="weekday">So</div>
+            </div>
+            <div class="days" id="calendarDays">
+                <!-- Tage werden dynamisch generiert -->
+            </div>
+        </div>
+        
+        <!-- Event Modal -->
+        <div class="event-modal" id="eventModal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeModal">&times;</span>
+                <h2 id="modalTitle">Neues Ereignis</h2>
+                
+                <div id="existingEvents" style="display: none;">
+                    <h3 style="margin-bottom: 16px; color: var(--text-secondary);">Vorhandene Ereignisse:</h3>
+                    <div id="eventsList" style="margin-bottom: 24px;"></div>
+                </div>
+                
+                <form id="eventForm">
+                    <input type="text" id="eventTitle" placeholder="Ereignistitel" required>
+                    <input type="time" id="eventTime" required>
+                    <textarea id="eventDescription" placeholder="Beschreibung (optional)"></textarea>
+                    
+                    <div class="reminder-section">
+                        <label>
+                            <input type="checkbox" id="enableReminder">
+                            Erinnerung aktivieren
+                        </label>
+                        <div id="reminderOptions" style="display: none;">
+                            <div class="reminder-inputs">
+                                <label>
+                                    <input type="number" id="reminderDays" min="0" max="30" value="0">
+                                    <span>Tage</span>
+                                </label>
+                                <label>
+                                    <input type="number" id="reminderHours" min="0" max="23" value="0">
+                                    <span>Stunden</span>
+                                </label>
+                                <label>
+                                    <input type="number" id="reminderMinutes" min="0" max="59" value="15">
+                                    <span>Minuten</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="color-picker">
+                        <label>Farbe:</label>
+                        <div class="color-options">
+                            <input type="radio" name="eventColor" value="#4A90E2" id="blue" checked>
+                            <label for="blue" class="color-option" style="background-color: #4A90E2;"></label>
+                            
+                            <input type="radio" name="eventColor" value="#50E3C2" id="teal">
+                            <label for="teal" class="color-option" style="background-color: #50E3C2;"></label>
+                            
+                            <input type="radio" name="eventColor" value="#F5A623" id="orange">
+                            <label for="orange" class="color-option" style="background-color: #F5A623;"></label>
+                            
+                            <input type="radio" name="eventColor" value="#BD10E0" id="purple">
+                            <label for="purple" class="color-option" style="background-color: #BD10E0;"></label>
+                            
+                            <input type="radio" name="eventColor" value="#7ED321" id="green">
+                            <label for="green" class="color-option" style="background-color: #7ED321;"></label>
+                        </div>
+                    </div>
+                    <button type="submit" class="save-btn">Speichern</button>
+                </form>
+            </div>
+        </div>
+        
+        <!-- Notification Settings Modal -->
+        <div class="notification-modal" id="notificationModal">
+            <div class="modal-content">
+                <span class="close-modal" id="closeNotificationModal">&times;</span>
+                <h2>Benachrichtigungseinstellungen</h2>
+                
+                <div class="notification-settings">
+                    <label class="switch-label">
+                        <input type="checkbox" id="notificationEnabled">
+                        <span class="switch"></span>
+                        Browser-Benachrichtigungen aktivieren
+                    </label>
+                    
+                    <label class="switch-label">
+                        <input type="checkbox" id="dailyReminder">
+                        <span class="switch"></span>
+                        Tägliche Zusammenfassung (8:00 Uhr)
+                    </label>
+                    
+                    <label class="switch-label">
+                        <input type="checkbox" id="soundEnabled">
+                        <span class="switch"></span>
+                        Benachrichtigungston
+                    </label>
+                    
+                    <div class="upcoming-events">
+                        <h3>Anstehende Erinnerungen</h3>
+                        <div id="upcomingReminders"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script.js"></script>
+</body>
+</html>
